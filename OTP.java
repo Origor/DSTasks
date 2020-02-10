@@ -1,5 +1,6 @@
 public class OTP {
     private static String encrypt(String message, String key) {
+        if (message.length() != key.length()) throw new AssertionError();
         String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         char[] msg = message.toUpperCase().toCharArray();
@@ -19,6 +20,7 @@ public class OTP {
     }
 
     private static String decrypt(String eMessage, String key) {
+        if (eMessage.length() != key.length()) throw new AssertionError();
         String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         char[] msg = eMessage.toUpperCase().toCharArray();
@@ -43,6 +45,7 @@ public class OTP {
     }
 
     private static String findKey (String message, String eMessage) {
+        if (message.length() != eMessage.length()) throw new AssertionError();
         String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         char[] msg = eMessage.toUpperCase().toCharArray();
