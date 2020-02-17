@@ -11,7 +11,7 @@ public class RSA7 {
     private RSAPrivateKey privateKey;
     private RSAPublicKey publicKey;
 
-    public RSA(RSAPrivateKey p, RSAPublicKey q) {
+    public RSA7(RSAPrivateKey p, RSAPublicKey q) {
         this.privateKey = p;
         this.publicKey = q;
     }
