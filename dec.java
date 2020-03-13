@@ -13,6 +13,28 @@ public class dec {
         }
     }
 
+    private static void decryptFile(byte[] a, byte[] c) {
+        byte[] key = {24, 48, -63, 4};
+        byte[] originalFile = new byte[a.length];
+
+        int index = 0;
+        for (byte b : a) {
+            originalFile[index] = (byte) (b ^ key[index % 4]);
+            index++;
+        }
+        compareFile(originalFile, c);
+    }
+
+    private static void compareFile(byte[] a, byte[] b) {
+        int index = 0;
+        for (byte c : b) {
+            if (c != b[index]) {
+                System.out.println("Well something wrong at byte " + index);
+            }
+            index++;
+        }
+    }
+
     public static void main(String[] args) {
         File encryptedFile = new File("C:\\Users\\ajgor\\IdeaProjects\\task2\\src\\mfc100.dll.encrypted");
         File file = new File("C:\\Users\\ajgor\\IdeaProjects\\task2\\src\\mfc100.dll");
@@ -36,9 +58,10 @@ public class dec {
                     encryptedBytes[i] = (byte) encinput.read();
                     key[i] = (byte) (bytes[i] ^ encryptedBytes[i]);
                 }
-                printByte(key); // this is the key [24, 48, -63, 4]
+                // printByte(key); // this is the key [24, 48, -63, 4]
                 j++;
             }
+            decryptFile(encryptedBytes, bytes);
             encinput.close();
             input.close();
         } catch (IOException e) {
