@@ -1,163 +1,142 @@
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PINTest {
-    private static final int MAX_TRIES = 3;
-    private int tryCounter = MAX_TRIES;
-    private boolean access = false;
-    private int securePin;
-
+    // if (A Il
     @Test
-    void testtruetruetrue() {
-        tryCounter = 3;
-        access = true;
-        securePin = 8455;
+    void test100() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        int pin = 1234;
+        PIN pinInstance = new PIN(pin);
 
-        assertTrue(checkPin(securePin));
-        assertTrue(access);
-        assert(tryCounter == 3);
+        Field accessField = pinInstance.getClass().getDeclaredField("access");
+        Field tryCounterField = pinInstance.getClass().getDeclaredField("tryCounter");
+        Field securePinField = pinInstance.getClass().getDeclaredField("securePin");
 
-        assertTrue(checkPin(securePin));
-        assertTrue(access);
-        assert(tryCounter == 3);
-        
-        assertTrue(checkPin(securePin));
-        assertTrue(access);
-        assert(tryCounter == 3);
+        accessField.setAccessible(true);
+        tryCounterField.setAccessible(true);
+        securePinField.setAccessible(true);
 
-        assertTrue(checkPin(securePin));
-        assertTrue(access);
-        assert(tryCounter == 3);
-    }
+        // set access to true
+        accessField.set(pinInstance, true);
 
-    @Test
-    void testfalsetruetrue() {
-        tryCounter = 0;
-        access = true;
-        securePin = 8455;
+        int tryCounter = tryCounterField.getInt(pinInstance);
+        boolean access = accessField.getBoolean(pinInstance);
+        int securePin = securePinField.getInt(pinInstance);
 
-        assertTrue(checkPin(securePin));
-        assertTrue(access);
-        assert(tryCounter == 3);
+        assert tryCounter == 3 && access && securePin == pin;
 
-        assertTrue(checkPin(securePin));
-        assertTrue(access);
-        assert(tryCounter == 3);
+        // run function
+        pinInstance.checkPin(pin + 1);
 
-        assertTrue(checkPin(securePin));
-        assertTrue(access);
-        assert(tryCounter == 3);
-    }
+        tryCounter = tryCounterField.getInt(pinInstance);
+        access = accessField.getBoolean(pinInstance);
+        securePin = securePinField.getInt(pinInstance);
 
-    @Test
-    void testtruefalsetrue() {
-        tryCounter = 3;
-        access = false;
-        securePin = 8455;
-
-        assertTrue(checkPin(securePin));
-        assertTrue(access);
-        assert(tryCounter == 3);
-
-        assertTrue(checkPin(securePin));
-        assertTrue(access);
-        assert(tryCounter == 3);
-
-        assertTrue(checkPin(securePin));
-        assertTrue(access);
-        assert(tryCounter == 3);
-    }
-
-    @Test
-    void testtruetruefalse() {
-        tryCounter = 3;
-        access = true;
-        securePin = 8455;
-
-        assertTrue(checkPin(securePin+1337));
-        assertTrue(access);
-        assert(tryCounter == 3);
-
-        assertTrue(checkPin(securePin+1337));
-        assertTrue(access);
-        assert(tryCounter == 3);
-
-        assertTrue(checkPin(securePin+1337));
-        assertTrue(access);
-        assert(tryCounter == 3);
-    }
-
-    @Test
-    void testfalsefalsetrue() {
-        tryCounter = 0;
-        access = false;
-        securePin = 8455;
-
-        assertFalse(checkPin(securePin));
-        assertFalse(access);
-        assertEquals(tryCounter, -1);
-
-        assertFalse(checkPin(securePin));
-        assertFalse(access);
-        assertEquals(tryCounter, -2);
-
-        assertFalse(checkPin(securePin));
-        assertFalse(access);
-        assertEquals(tryCounter, -3);
-    }
-
-    @Test
-    void testtruefalsefalse() {
-        tryCounter = 3;
-        access = false;
-        securePin = 8455;
-
-        assertFalse(checkPin(securePin+1337));
-        assertFalse(access);
-        assertEquals(tryCounter, 2);
-
-        assertFalse(checkPin(securePin+1337));
-        assertFalse(access);
-        assertEquals(tryCounter, 1);
-
-        assertFalse(checkPin(securePin+1337));
-        assertFalse(access);
-        assertEquals(tryCounter, 0);
-    }
-
-    @Test
-    void testfalsetruefalse() {
-        tryCounter = 0;
-        access = true;
-        securePin = 8455;
-
-        assertTrue(checkPin(securePin+1337));
-        assertTrue(access);
+        //Should not grant access
+        assertEquals(securePin, pin);
         assertEquals(tryCounter, 3);
-
-        assertTrue(checkPin(securePin+1337));
         assertTrue(access);
-        assertEquals(tryCounter, 3);
-
-        assertTrue(checkPin(securePin+1337));
-        assertTrue(access);
-        assertEquals(tryCounter, 3);
-
-        assertTrue(checkPin(securePin+1337));
-        assertTrue(access);
-        assertEquals(tryCounter, 3);
     }
 
-    public boolean checkPin(int pin) {
-        if(access || (tryCounter > 0 && pin == securePin)) {
-            access = true;
-            tryCounter = 3;
-            return true;
-        }else{
-            tryCounter -= 1;
-            return false;
-        }
+    @Test
+    void test000() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        int pin = 1234;
+        PIN pinInstance = new PIN(pin);
+
+        Field accessField = pinInstance.getClass().getDeclaredField("access");
+        Field tryCounterField = pinInstance.getClass().getDeclaredField("tryCounter");
+        Field securePinField = pinInstance.getClass().getDeclaredField("securePin");
+
+        accessField.setAccessible(true);
+        tryCounterField.setAccessible(true);
+        securePinField.setAccessible(true);
+
+        int tryCounter = tryCounterField.getInt(pinInstance);
+        boolean access = accessField.getBoolean(pinInstance);
+        int securePin = securePinField.getInt(pinInstance);
+
+        assert tryCounter == 3 && !access && securePin == pin;
+
+        // run function
+        pinInstance.checkPin(pin + 1);
+        pinInstance.checkPin(pin + 1);
+        pinInstance.checkPin(pin + 1);
+        pinInstance.checkPin(pin + 1);
+
+        tryCounter = tryCounterField.getInt(pinInstance);
+        access = accessField.getBoolean(pinInstance);
+        securePin = securePinField.getInt(pinInstance);
+
+        //Should not grant access
+        assertEquals(securePin, pin);
+        assertTrue(tryCounter < 0);
+        assertFalse(access);
     }
 
+    @Test
+    void test010() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        int pin = 1234;
+        PIN pinInstance = new PIN(pin);
+
+        Field accessField = pinInstance.getClass().getDeclaredField("access");
+        Field tryCounterField = pinInstance.getClass().getDeclaredField("tryCounter");
+        Field securePinField = pinInstance.getClass().getDeclaredField("securePin");
+
+        accessField.setAccessible(true);
+        tryCounterField.setAccessible(true);
+        securePinField.setAccessible(true);
+
+        int tryCounter = tryCounterField.getInt(pinInstance);
+        boolean access = accessField.getBoolean(pinInstance);
+        int securePin = securePinField.getInt(pinInstance);
+
+        assert tryCounter == 3 && !access && securePin == pin;
+
+        // run function
+        pinInstance.checkPin(pin + 1);
+
+        tryCounter = tryCounterField.getInt(pinInstance);
+        access = accessField.getBoolean(pinInstance);
+        securePin = securePinField.getInt(pinInstance);
+
+        //Should not grant access
+        assertEquals(securePin, pin);
+        assertTrue(tryCounter > 0);
+        assertNotEquals(true, access);
+    }
+
+    @Test
+    void test011() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        int pin = 1234;
+        PIN pinInstance = new PIN(pin);
+
+        Field accessField = pinInstance.getClass().getDeclaredField("access");
+        Field tryCounterField = pinInstance.getClass().getDeclaredField("tryCounter");
+        Field securePinField = pinInstance.getClass().getDeclaredField("securePin");
+
+        accessField.setAccessible(true);
+        tryCounterField.setAccessible(true);
+        securePinField.setAccessible(true);
+
+        int tryCounter = tryCounterField.getInt(pinInstance);
+        boolean access = accessField.getBoolean(pinInstance);
+        int securePin = securePinField.getInt(pinInstance);
+
+        assert tryCounter == 3 && !access && securePin == pin;
+
+        // run function
+        pinInstance.checkPin(pin);
+
+        tryCounter = tryCounterField.getInt(pinInstance);
+        access = accessField.getBoolean(pinInstance);
+        securePin = securePinField.getInt(pinInstance);
+
+        //Should not grant access
+        assertEquals(securePin, pin);
+        assertEquals(tryCounter, 3);
+        assertTrue(access);
+    }
 }
